@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: nyc_taxi_analysis
+    database: nyc-taxi-trips-455202
+    schema: nyc_taxi_analysis
+    tables:
+      - name: taxi_trips_jan2022
