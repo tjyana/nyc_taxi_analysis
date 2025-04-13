@@ -4,7 +4,7 @@ WITH trips AS (
   SELECT
     DATE(pickup_datetime) AS trip_date,
     TIMESTAMP_DIFF(dropoff_datetime, pickup_datetime, SECOND) AS trip_duration
-  FROM {{ ref('clean_taxi_trips') }}
+  FROM {{ ref('1_NEW_taxi_trips_cleaned') }}
 )
 SELECT
   trip_date,
