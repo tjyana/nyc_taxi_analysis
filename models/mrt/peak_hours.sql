@@ -5,7 +5,7 @@ WITH hourly_trips AS (
     EXTRACT(HOUR FROM pickup_datetime) as pickup_hour,
     COUNT(*) AS total_trips,
 
-  FROM {{ ref('1_NEW_taxi_trips_cleaned')}}
+  FROM {{ ref('stg_taxi_trips') }}
   GROUP BY pickup_hour
     )
 

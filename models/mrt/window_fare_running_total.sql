@@ -6,4 +6,4 @@ SELECT
     ORDER BY pickup_datetime
   ) as fare_running_total
 
-FROM {{ ref('1_NEW_taxi_trips_cleaned') }}
+FROM {{ ref('stg_taxi_trips') }}
