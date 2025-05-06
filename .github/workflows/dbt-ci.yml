@@ -47,7 +47,6 @@ jobs:
           echo '      method: oauth' >> "$HOME/.dbt/profiles.yml"
           echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
           echo '      dataset: prod' >> "$HOME/.dbt/profiles.yml"
-          echo '      location: asia-northeast1' >> "$HOME/.dbt/profiles.yml"
           echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
 
       - name: dbt debug
