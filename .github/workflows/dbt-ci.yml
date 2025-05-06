@@ -7,9 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  dbt:
+  run-dbt:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,64 +18,39 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_KEY }}
 
-
-
-      - name: Ensure BigQuery datasets exist
-        run: |
-          # make sure your dev dataset exists
-          bq --location=US mk -d \
-            --project_id=${{ secrets.GCP_PROJECT_ID }} dev \
-            || echo "Dataset dev already exists"
-          # (optional) do the same for prod
-          bq --location=US mk -d \
-            --project_id=${{ secrets.GCP_PROJECT_ID }} prod \
-            || echo "Dataset prod already exists"
-
-
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+      - name: Install dbt and adapter
         run: |
           python -m pip install --upgrade pip
           pip install dbt-core dbt-bigquery
 
-      - name: Create profiles.yml
+      - name: Configure dbt profiles
         run: |
-          mkdir -p "$HOME/.dbt"
-          echo 'nyc_taxi_analysis:' > "$HOME/.dbt/profiles.yml"
-          echo '  target: "dev"' >> "$HOME/.dbt/profiles.yml"
-          echo '  outputs:' >> "$HOME/.dbt/profiles.yml"
-          echo '    dev:' >> "$HOME/.dbt/profiles.yml"
-          echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
-          echo '      method: oauth' >> "$HOME/.dbt/profiles.yml"
-          echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
-          echo '      dataset: dev' >> "$HOME/.dbt/profiles.yml"
-          echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
-          echo '    prod:' >> "$HOME/.dbt/profiles.yml"
-          echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
-          echo '      method: oauth' >> "$HOME/.dbt/profiles.yml"
-          echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
-          echo '      dataset: prod' >> "$HOME/.dbt/profiles.yml"
-          echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
-
-
-
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml <<EOF
+my_project:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: ${{ secrets.GCP_PROJECT_ID }}
+      dataset: dev
+      threads: 4
+EOF
 
       - name: dbt debug
-        run: dbt debug --profiles-dir "$HOME/.dbt"
+        run: dbt debug --profiles-dir ~/.dbt
 
       - name: dbt deps
-        run: dbt deps --profiles-dir "$HOME/.dbt"
-
-      - name: dbt seed
-        run: dbt seed --profiles-dir "$HOME/.dbt"
+        run: dbt deps --profiles-dir ~/.dbt
 
       - name: dbt run
-        run: dbt run --profiles-dir "$HOME/.dbt"
+        run: dbt run --profiles-dir ~/.dbt
 
       - name: dbt test
-        run: dbt test --profiles-dir "$HOME/.dbt"
+        run: dbt test --profiles-dir ~/.dbt
