@@ -40,7 +40,6 @@ jobs:
           echo '      method: oauth' >> "$HOME/.dbt/profiles.yml"
           echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
           echo '      dataset: dev' >> "$HOME/.dbt/profiles.yml"
-          echo '      location: asia-northeast1' >> "$HOME/.dbt/profiles.yml"
           echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
           echo '    prod:' >> "$HOME/.dbt/profiles.yml"
           echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
