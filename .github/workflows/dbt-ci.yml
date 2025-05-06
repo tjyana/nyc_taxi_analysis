@@ -30,31 +30,28 @@ jobs:
           pip install dbt-core dbt-bigquery
 
       - name: Write GCP keyfile
-        run: |
-          echo "${{ secrets.GCP_KEY }}" > "$HOME/gcp-key.json"
+        run: echo "${{ secrets.GCP_KEY }}" > "$HOME/gcp-key.json"
 
       - name: Create profiles.yml
         run: |
           mkdir -p "$HOME/.dbt"
-          cat <<EOF > "$HOME/.dbt/profiles.yml"
-nyc_taxi_analysis:
-  target: "dev"
-  outputs:
-    dev:
-      type: bigquery
-      method: service-account
-      project: ${{ secrets.GCP_PROJECT_ID }}
-      dataset: dev
-      keyfile: "$HOME/gcp-key.json"
-      threads: 4
-    prod:
-      type: bigquery
-      method: service-account
-      project: ${{ secrets.GCP_PROJECT_ID }}
-      dataset: prod
-      keyfile: "$HOME/gcp-key.json"
-      threads: 4
-EOF
+          echo 'nyc_taxi_analysis:' > "$HOME/.dbt/profiles.yml"
+          echo '  target: "dev"' >> "$HOME/.dbt/profiles.yml"
+          echo '  outputs:' >> "$HOME/.dbt/profiles.yml"
+          echo '    dev:' >> "$HOME/.dbt/profiles.yml"
+          echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
+          echo '      method: service-account' >> "$HOME/.dbt/profiles.yml"
+          echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
+          echo '      dataset: dev' >> "$HOME/.dbt/profiles.yml"
+          echo '      keyfile: $HOME/gcp-key.json' >> "$HOME/.dbt/profiles.yml"
+          echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
+          echo '    prod:' >> "$HOME/.dbt/profiles.yml"
+          echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
+          echo '      method: service-account' >> "$HOME/.dbt/profiles.yml"
+          echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
+          echo '      dataset: prod' >> "$HOME/.dbt/profiles.yml"
+          echo '      keyfile: $HOME/gcp-key.json' >> "$HOME/.dbt/profiles.yml"
+          echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
 
       - name: dbt debug
         run: dbt debug --profiles-dir "$HOME/.dbt"
