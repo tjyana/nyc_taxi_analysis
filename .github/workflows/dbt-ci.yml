@@ -48,6 +48,18 @@ jobs:
           echo '      dataset: prod' >> "$HOME/.dbt/profiles.yml"
           echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
 
+      - name: Ensure BigQuery datasets exist
+        run: |
+          # make sure your dev dataset exists
+          bq --location=US mk -d \
+            --project_id=${{ secrets.GCP_PROJECT_ID }} dev \
+            || echo "Dataset dev already exists"
+          # (optional) do the same for prod
+          bq --location=US mk -d \
+            --project_id=${{ secrets.GCP_PROJECT_ID }} prod \
+            || echo "Dataset prod already exists"
+
+
       - name: dbt debug
         run: dbt debug --profiles-dir "$HOME/.dbt"
 
