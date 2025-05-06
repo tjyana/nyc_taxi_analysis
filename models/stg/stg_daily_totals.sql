@@ -2,7 +2,7 @@
 
 WITH raw AS (
     SELECT *
-    FROM {{ ref('1_NEW_taxi_trips_cleaned') }}
+    FROM {{ ref('src_taxi_trips') }}
 ),
 -- Aggregate the data by day
 daily_totals AS (
