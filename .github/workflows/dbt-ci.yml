@@ -32,6 +32,9 @@ jobs:
       - name: Write GCP keyfile
         run: echo "${{ secrets.GCP_KEY }}" > "$HOME/gcp-key.json"
 
+      - name: Set GCP credentials for dbt
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcp-key.json" >> "$GITHUB_ENV"
+
       - name: Create profiles.yml
         run: |
           mkdir -p "$HOME/.dbt"
