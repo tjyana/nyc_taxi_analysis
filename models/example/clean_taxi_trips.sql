@@ -1,8 +1,10 @@
 -- models/clean_taxi_trips.sql
 
 WITH raw AS (
-    SELECT *
-    FROM `nyc-taxi-trips-455202.nyc_taxi_analysis.taxi_trips_jan2022`
+    -- SELECT *
+    -- FROM `nyc-taxi-trips-455202.nyc_taxi_analysis.taxi_trips_jan2022`
+    SELECT * FROM {{ source('nyc_taxi_analysis', 'taxi_trips_jan2022') }}
+
 )
 SELECT
     pickup_datetime,
