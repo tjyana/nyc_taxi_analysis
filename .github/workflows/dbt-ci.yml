@@ -31,12 +31,12 @@ jobs:
 
       - name: Write GCP keyfile
         run: |
-          echo "${{ secrets.GCP_KEY }}" > $HOME/gcp-key.json
+          echo "${{ secrets.GCP_KEY }}" > "$HOME/gcp-key.json"
 
       - name: Create profiles.yml
         run: |
-          mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml <<EOF
+          mkdir -p "$HOME/.dbt"
+          cat <<EOF > "$HOME/.dbt/profiles.yml"
 nyc_taxi_analysis:
   target: "dev"
   outputs:
@@ -45,28 +45,28 @@ nyc_taxi_analysis:
       method: service-account
       project: ${{ secrets.GCP_PROJECT_ID }}
       dataset: dev
-      keyfile: $HOME/gcp-key.json
+      keyfile: "$HOME/gcp-key.json"
       threads: 4
     prod:
       type: bigquery
       method: service-account
       project: ${{ secrets.GCP_PROJECT_ID }}
       dataset: prod
-      keyfile: $HOME/gcp-key.json
+      keyfile: "$HOME/gcp-key.json"
       threads: 4
-
+EOF
 
       - name: dbt debug
-        run: dbt debug --profiles-dir ~/.dbt
+        run: dbt debug --profiles-dir "$HOME/.dbt"
 
       - name: dbt deps
-        run: dbt deps --profiles-dir ~/.dbt
+        run: dbt deps --profiles-dir "$HOME/.dbt"
 
       - name: dbt seed
-        run: dbt seed --profiles-dir ~/.dbt
+        run: dbt seed --profiles-dir "$HOME/.dbt"
 
       - name: dbt run
-        run: dbt run --profiles-dir ~/.dbt
+        run: dbt run --profiles-dir "$HOME/.dbt"
 
       - name: dbt test
-        run: dbt test --profiles-dir ~/.dbt
+        run: dbt test --profiles-dir "$HOME/.dbt"
