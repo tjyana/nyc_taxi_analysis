@@ -1,4 +1,5 @@
-
+-- This model creates a cleaned version of the taxi trips data
+-- by removing duplicates and adding a surrogate key.
 
 -- start of CTE
 WITH
@@ -19,7 +20,7 @@ tag_duplicates AS (
         fare_amount
       ORDER BY pickup_datetime
     ) AS row_num
-    FROM {{ source('nyc_taxi_analysis', 'taxi_trips_jan2022') }}
+    FROM {{ ref('src_taxi_trips') }}
   -- FROM `nyc-taxi-trips-455202.nyc_taxi_analysis.taxi_trips_jan2022`
 ),
 
