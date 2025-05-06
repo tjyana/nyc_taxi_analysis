@@ -16,7 +16,7 @@ WITH hourly_avg AS (
   SELECT
     EXTRACT(HOUR FROM pickup_datetime) AS pickup_hour,
     AVG(tip_amount) AS avg_tip
-  FROM {{ ref('clean_taxi_trips') }}
+  FROM {{ ref('stg_taxi_trips') }}
   GROUP BY EXTRACT(HOUR FROM pickup_datetime)
 )
 
