@@ -54,7 +54,7 @@ nyc_taxi_analysis:
       dataset: prod
       keyfile: $HOME/gcp-key.json
       threads: 4
-EOF
+
 
       - name: dbt debug
         run: dbt debug --profiles-dir ~/.dbt
