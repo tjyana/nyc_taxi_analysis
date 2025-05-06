@@ -29,12 +29,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install dbt-core dbt-bigquery
 
-      - name: Write GCP keyfile
-        run: echo "${{ secrets.GCP_KEY }}" > "$HOME/gcp-key.json"
-
-      - name: Set GCP credentials for dbt
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcp-key.json" >> "$GITHUB_ENV"
-
       - name: Create profiles.yml
         run: |
           mkdir -p "$HOME/.dbt"
@@ -43,19 +37,17 @@ jobs:
           echo '  outputs:' >> "$HOME/.dbt/profiles.yml"
           echo '    dev:' >> "$HOME/.dbt/profiles.yml"
           echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
-          echo '      method: service-account' >> "$HOME/.dbt/profiles.yml"
+          echo '      method: oauth' >> "$HOME/.dbt/profiles.yml"
           echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
           echo '      dataset: dev' >> "$HOME/.dbt/profiles.yml"
-          echo "      location: asia-northeast1" >> "$HOME/.dbt/profiles.yml"
-          echo "      keyfile: $HOME/gcp-key.json" >> "$HOME/.dbt/profiles.yml"
+          echo '      location: asia-northeast1' >> "$HOME/.dbt/profiles.yml"
           echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
           echo '    prod:' >> "$HOME/.dbt/profiles.yml"
           echo '      type: bigquery' >> "$HOME/.dbt/profiles.yml"
-          echo '      method: service-account' >> "$HOME/.dbt/profiles.yml"
+          echo '      method: oauth' >> "$HOME/.dbt/profiles.yml"
           echo '      project: '"${{ secrets.GCP_PROJECT_ID }}" >> "$HOME/.dbt/profiles.yml"
           echo '      dataset: prod' >> "$HOME/.dbt/profiles.yml"
-          echo "      location: asia-northeast1" >> "$HOME/.dbt/profiles.yml"
-          echo "      keyfile: $HOME/gcp-key.json" >> "$HOME/.dbt/profiles.yml"
+          echo '      location: asia-northeast1' >> "$HOME/.dbt/profiles.yml"
           echo '      threads: 4' >> "$HOME/.dbt/profiles.yml"
 
       - name: dbt debug
